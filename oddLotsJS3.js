@@ -11,9 +11,9 @@ maxZoom: 19
 // create global variables we can use for layer controls
 var oddLotsGeoJSON;
 var NYBBgeoJSON;
-var dataLayer;
+//var ownerTypeGeoJSON;
 
-console.log('this file');
+
 addNYBB(); 
 
 function addNYBB() {
@@ -55,7 +55,7 @@ $.getJSON( "geojson/nybb.geojson", function( data ) {
         };
         return style;
     }
-    console.log(data);
+ //   console.log(data);
 
     NYBBgeoJSON = L.geoJson(NYBBPolygon, {
         style: NYBBstyle
@@ -126,46 +126,43 @@ function (data) {
 
 //addOwnerData();
 //});
+// https://eichnersara.sartodb.com/api/v2/sql?q=SELECT * FROM bk_oddlots &format=GeoJSON WHERE lottype = 
 
 function addDataToMap(dataLayer, choice) {
-$('.choice').change(function () {
-    console.log('anything');
+$('.choice').change(function() {
     var sql = 'SELECT * FROM bk_oddlots';
-          if ($(this).val() === 'lottype') {
-          }
-          else {
-          sql += " WHERE lottype = '" + ($(this).val() + "'" );
-          }
-          console.log(sql);
-    var url = 'https://eichnersara.cartodb.com/api/v2/sql?' + $.param({
-    q: sql,
+        if ($(this).val() = 'lottype') {
+        }
+        else {
+        sql += "WHERE 'lottype' = " + ($(this).val() + "'" );
+        }
+        console.log(data);
+    var url = 'https://eichnersara.sartodb.com/api/v2/sql?' + $.param({
+    q: 'sql' + choice,
     format: 'GeoJSON'        
     });
     $.getJSON(url)
 
     .done(function (data) {
     var ownerData = data;
-    
+    console.log(data);
+
     dataLayer.clearLayers();
-    
     dataLayer.addData(data);
     });
  });
+
+    $(document).ready(function () {
+        var OwnerData = L.geoJson(null).addTo(map);
+        //addTileLayer(map);
+        addDataToMap(dataLayer, '6');
+        $('.choice').change(function () {
+        addDataToMap(dataLayer, $(this).val());
+        // not sure if this function should include the other addToMap calls
+        // ownerTypeGeoJSON.addTo(map);
+        });
+    }); 
 } 
-  $(document).ready(function () {
-    dataLayer = L.geoJson(null).addTo(map);
-    console.log('anything')
-      //addTileLayer(map);
-    addDataToMap(dataLayer, 'lottype');
-
-    $('.choice').change(function () {
-    addDataToMap(dataLayer, $(this).val());
-     // Seems like this is repeating addDataToMap from above. is this where there is a problem? 
-     // not sure if this function should include the other addToMap calls
-     // ownerTypeGeoJSON.addTo(map);
-     });
- }); 
-
 
 
 
